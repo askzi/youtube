@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Search</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>YouTube Video Search</h1>
+    </header>
+    
+    <div class="container">
+        <form action="/search" method="get">
+            <input type="text" name="q" placeholder="Search for videos" value="<%= query %>" required>
+            <button type="submit">Search</button>
+        </form>
+        
+        <% if (videos) { %>
+            <div class="video-results">
+                <% videos.forEach(video => { %>
+                    <div class="video" onclick="showVideo('<%= video.id.videoId %>')">
+                        <img src="<%= video.snippet.thumbnails.medium.url %>" alt="<%= video.snippet.title %>">
+                        <h2><%= video.snippet.title %></h2>
+                        <p>Views: <%= video.statistics.viewCount %></p>
+                        <p>Uploaded on: <%= new Date(video.snippet.publishedAt).toLocaleDateString() %></p>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeVideo()">&times;</span>
+            <iframe id="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 YouTube Search App</p>
+    </footer>
+
+    <script>
+        function showVideo(videoId) {
+           // alert("Now playing video ID: " + videoId);
+            const modal = document.getElementById('videoModal');
+            const videoFrame = document.getElementById('videoFrame');
+            videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            modal.style.display = 'block';
+        }
+    
+        function closeVideo() {
+            const modal = document.getElementById('videoModal');
+            const videoFrame = document.getElementById('videoFrame');
+            videoFrame.src = '';
+            modal.style.display = 'none';
+        }
+    
+        window.onclick = function(event) {
+            const modal = document.getElementById('videoModal');
+            if (event.target == modal) {
+                closeVideo();
+            }
+        }
+    </script>
+
+
+
+</body>
+</html>
